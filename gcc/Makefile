@@ -1,10 +1,10 @@
-INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F0xx_StdPeriph_Driver/inc 
-SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src 
+INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F0xx_StdPeriph_Driver/inc ./CMSIS_RTX/include 
+SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src ../mdk/RTE/CMSIS/ 
 
 #All the dtandard peripherial library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F0xx_StdPeriph_Driver/src/*.c ))
 #the C files to compile
-CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c
+CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c RTX_Conf_CM.c
 #the assembly files assemble
 ASM_FILES:= startup_stm32f051.S
 #the target microcontroller
@@ -15,14 +15,14 @@ CC=arm-none-eabi-gcc
 #The linker script for the microcontroller
 LD_SCRIPTS:= STM32F051x6_FLASH.ld
 #the directories for linker files
-LIB_DIRS:= device/linker
+LIB_DIRS:= device/linker ./CMSIS_RTX/bin
 #the libraries to link
-LIB_NAMES:=
+LIB_NAMES:=RTX_CM0
 #linker flags
 LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS)
 #PREPROCESSOR OPTIONS
 #Define macro for all files
-DEFINES:= USE_STDPERIPH_DRIVER
+DEFINES:= USE_STDPERIPH_DRIVER __RTX
 DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
 INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
 ARCHFLAGS:= -mthumb -mcpu=cortex-m0
